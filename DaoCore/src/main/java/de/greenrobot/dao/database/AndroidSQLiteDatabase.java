@@ -26,6 +26,10 @@ public class AndroidSQLiteDatabase implements Database {
         this.delegate = delegate;
     }
 
+    public SQLiteDatabase getDelegate() {
+        return delegate;
+    }
+
     @Override
     public Cursor rawQuery(String sql, String[] selectionArgs) {
         return delegate.rawQuery(sql, selectionArgs);

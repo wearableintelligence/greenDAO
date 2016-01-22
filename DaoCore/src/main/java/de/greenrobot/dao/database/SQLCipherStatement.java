@@ -25,6 +25,10 @@ public class SQLCipherStatement implements DatabaseStatement {
         this.delegate = delegate;
     }
 
+    public SQLiteStatement getDelegate() {
+        return delegate;
+    }
+
     @Override
     public void execute() {
         delegate.execute();
