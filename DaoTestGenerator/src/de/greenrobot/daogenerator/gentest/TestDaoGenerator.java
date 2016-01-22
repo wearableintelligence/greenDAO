@@ -39,6 +39,7 @@ public class TestDaoGenerator {
     private final Entity testEntity;
     private final Entity dateEntity;
     private final Schema schema2;
+    private final Schema schemaUnitTest;
 
     public TestDaoGenerator() {
         schema = new Schema(1, "de.greenrobot.daotest");
@@ -59,14 +60,17 @@ public class TestDaoGenerator {
         createAutoincrement();
         createSqliteMaster();
         createCustomType();
+        createIndexedString();
 
         schema2 = createSchema2();
+        schemaUnitTest = createSchemaUnitTest();
     }
 
     public void generate() throws Exception {
         DaoGenerator daoGenerator = new DaoGenerator();
         daoGenerator.generateAll(schema, "../DaoTest/src-gen", null, "../DaoTest/src");
         daoGenerator.generateAll(schema2, "../DaoTest/src-gen", null, "../DaoTest/src");
+        daoGenerator.generateAll(schemaUnitTest, "../DaoTest/src-unit-test", null, "../DaoTest/src-unit-test");
     }
 
     protected void createSimple() {
@@ -101,15 +105,19 @@ public class TestDaoGenerator {
 
     protected Entity createTest() {
         Entity testEntity = schema.addEntity("TestEntity");
-        testEntity.addIdProperty();
-        testEntity.addIntProperty("simpleInt").notNull();
-        testEntity.addIntProperty("simpleInteger");
-        testEntity.addStringProperty("simpleStringNotNull").notNull();
+        testEntity.setJavaDoc("This entity is used by internal tests of greenDAO.\n" +
+                "(This JavaDoc is defined in the generator project.)");
+        testEntity.setCodeBeforeClass("// This is another test comment, you could also apply annotations like this");
+        testEntity.addIdProperty().javaDocField("JavaDoc test field");
+        testEntity.addIntProperty("simpleInt").notNull().javaDocGetter("JavaDoc test getter");
+        testEntity.addIntProperty("simpleInteger").javaDocSetter("JavaDoc test setter");
+        testEntity.addStringProperty("simpleStringNotNull").notNull().javaDocGetterAndSetter("JavaDoc test getter and setter");
         testEntity.addStringProperty("simpleString");
         testEntity.addStringProperty("indexedString").index();
         testEntity.addStringProperty("indexedStringAscUnique").indexAsc(null, true);
         testEntity.addDateProperty("simpleDate");
         testEntity.addBooleanProperty("simpleBoolean");
+        testEntity.addByteArrayProperty("simpleByteArray");
         return testEntity;
     }
 
@@ -258,6 +266,12 @@ public class TestDaoGenerator {
                 "de.greenrobot.daotest.customtype.MyTimestampConverter");
     }
 
+    protected void createIndexedString() {
+        Entity entity = schema.addEntity("IndexedStringEntity");
+        entity.addIdProperty();
+        entity.addStringProperty("indexedString").index();
+    }
+
     private Schema createSchema2() {
         Schema schema2 = new Schema(1, "de.greenrobot.daotest2");
         schema2.setDefaultJavaPackageTest("de.greenrobot.daotest2.entity");
@@ -291,5 +305,12 @@ public class TestDaoGenerator {
         return schema2;
     }
 
+    private Schema createSchemaUnitTest() {
+        Schema schema = new Schema(1, "de.greenrobot.dao.unittest");
+
+        Entity entity = schema.addEntity("MinimalEntity");
+        entity.addIdProperty();
+        return schema;
+    }
 
 }
