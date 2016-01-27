@@ -1,11 +1,10 @@
 package de.greenrobot.daotest;
 
-import android.database.sqlite.SQLiteDatabase;
-
 import java.util.Map;
 
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.AbstractDaoSession;
+import de.greenrobot.dao.database.Database;
 import de.greenrobot.dao.identityscope.IdentityScopeType;
 import de.greenrobot.dao.internal.DaoConfig;
 
@@ -94,7 +93,7 @@ public class DaoSession extends AbstractDaoSession {
     private final CustomTypeEntityDao customTypeEntityDao;
     private final IndexedStringEntityDao indexedStringEntityDao;
 
-    public DaoSession(SQLiteDatabase db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
+    public DaoSession(Database db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
         super(db);
 
