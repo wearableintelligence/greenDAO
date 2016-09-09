@@ -192,7 +192,7 @@ public class QueryBuilder<T> {
             checkOrderBuilder();
             append(orderBuilder, property);
             if (String.class.equals(property.type)) {
-                orderBuilder.append(" COLLATE LOCALIZED");
+                orderBuilder.append(" COLLATE NOCASE");
             }
             orderBuilder.append(ascOrDescWithLeadingSpace);
         }
